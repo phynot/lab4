@@ -18,15 +18,26 @@ public class ElevatorSimulation
 		}
 	}
 	public void start() throws InterruptedException{
-		SimClock clock = new SimClock();
+		//SimClock clock = new SimClock();
 		BuildingManager manager = new BuildingManager();
 		getTotalSimulationTime();
 		getSimulatedSecondRate();
 		getPassengerArrivals();
 		while (SimClock.getTime() <= totalSimulationTime){
+			for (int i = 0; i < tracker.size(); ++i){
+				for (int j = 0; j < tracker.get(i).size(); ++j){
+					if (tracker.get(i).get(j).getExpectedTimeOfArrival() == SimClock.getTime()){
+						manager.modifyFloorState(i,  tracker.get(i).get(j));
+						int timePeriod = tracker.get(i).get(j).getTimePeriod();
+						tracker.get(i).get(j).setExpectedTimeOfArrival(SimClock.getTime() + timePeriod);
+					}
+				}
+			}
 			Thread.sleep(simulatedSecondRate);
 			SimClock.tick();
 		}
+			
+			
 		/* did i read in the input correctly maybe maybe not
 		System.out.println(tracker.size());
 		for (int i = 0; i < tracker.size(); ++i){
@@ -61,6 +72,7 @@ public class ElevatorSimulation
 				passengerBehavior.setNumPassengers(Integer.parseInt(infoToProcess[0]));
 				passengerBehavior.setDestinationFloor(Integer.parseInt(infoToProcess[1]));
 				passengerBehavior.setTimePeriod(Integer.parseInt(infoToProcess[2]));
+				passengerBehavior.setExpectedTimeOfArrival(Integer.parseInt(infoToProcess[2]));
 				tracker.get(currentFloor).add(passengerBehavior);
 				}
 			++currentFloor;

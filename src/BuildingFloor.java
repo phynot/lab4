@@ -1,34 +1,34 @@
 
 public class BuildingFloor
 {
-	private int[] totalDestinationRequests;
-	private int[] arrivedPassengers;
-	private int[] passengerRequests;
+	private int[] totalDestinationRequests = new int[5];
+	private int[] arrivedPassengers = new int[5];
+	private int[] passengerRequests = new int[5];
 	private int approachingElevator;
 	
-	public int[] getTotalDestinationRequests()
+	public int getTotalDestinationRequestsAtIndex(int index)
 	{
-		return totalDestinationRequests;
+		return totalDestinationRequests[index];
 	}
-	public void setTotalDestinationRequests(int[] totalDestinationRequests)
+	public void setTotalDestinationRequestsAtIndex(int index, int num)
 	{
-		this.totalDestinationRequests = totalDestinationRequests;
+		this.totalDestinationRequests[index] = num;
 	}
-	public int[] getArrivedPassengers()
+	public int getArrivedPassengersAtIndex(int index)
 	{
-		return arrivedPassengers;
+		return arrivedPassengers[index];
 	}
-	public void setArrivedPassengers(int[] arrivedPassengers)
+	public void incrementArrivedPassengersAtIndex(int index, int num)
 	{
-		this.arrivedPassengers = arrivedPassengers;
+		this.arrivedPassengers[index] += num;
 	}
-	public int[] getPassengerRequests()
+	public int getPassengerRequestsAtIndex(int index)
 	{
-		return passengerRequests;
+		return passengerRequests[index];
 	}
-	public void setPassengerRequests(int[] passengerRequests)
+	public void setPassengerRequestsAtIndex(int index, int num)
 	{
-		this.passengerRequests = passengerRequests;
+		this.passengerRequests[index] = num;
 	}
 	public int getApproachingElevator()
 	{

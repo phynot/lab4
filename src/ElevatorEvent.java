@@ -4,6 +4,10 @@ public class ElevatorEvent
 	private int destination;
 	private int expectedArrival;
 	
+	public ElevatorEvent(int destination, int expectedArrival){
+		this.destination = destination;
+		this.expectedArrival = expectedArrival;
+	}
 	public int getDestination()
 	{
 		return destination;

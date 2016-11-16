@@ -37,6 +37,12 @@ public class BuildingManager
 		floorLock.unlock();
 	}
 	
+	public void freeThatFloor(int i){
+		floorLock.lock();
+		floors[i].setApproachingElevator(-1);
+		floorLock.unlock();
+	}
+	
 	public void modifyFloorState(int i, PassengerArrival behavior){
 		floorLock.lock();
 		int destination = behavior.getDestinationFloor();
@@ -46,6 +52,15 @@ public class BuildingManager
 		floors[i].setTotalDestinationRequestsAtIndex(destination, currentNumRequests + incomingNumRequests);
 		floors[i].setPassengerRequestsAtIndex(destination, currentPassengerRequests + incomingNumRequests);
 		floorLock.unlock();
+	}
+	
+	public void unloadAtFloor(int dest, int origin, int numPassengers){
+		floorLock.lock();
+		floors[dest].incrementArrivedPassengersAtIndex(origin, numPassengers);
+		int currentPassengerRequests = floors[origin].getPassengerRequestsAtIndex(dest);
+		floors[origin].setPassengerRequestsAtIndex(origin, currentPassengerRequests - numPassengers);
+		floorLock.unlock();
+
 	}
 	public BuildingFloor[] getFloors()
 	{

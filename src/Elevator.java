@@ -29,10 +29,36 @@ public class Elevator implements Runnable
 		while(true && !Thread.interrupted()){
 			if (!moveQueue.isEmpty()){
 				todo = moveQueue.remove(0);
+				int ETA_delay = 0;
+				int dest = todo.getDestination();
+				// going up
+				for (int i = currentFloor; i < dest; ++i){
+					if (passengerDestinations[i] > 0){
+						totalUnloadedPassengers += passengerDestinations[i];
+						numPassengers -= passengerDestinations[i];
+						manager.unloadAtFloor(i, currentFloor, passengerDestinations[i]);
+						ETA_delay += 10;
+					}
+				}
+				
+				// going down
+				for (int i = currentFloor; i > dest; --i){
+					if (passengerDestinations[i] > 0){
+						totalUnloadedPassengers += passengerDestinations[i];
+						ETA_delay += 10;
+						manager.unloadAtFloor(i, currentFloor, passengerDestinations[i]);
+						numPassengers -= passengerDestinations[i];
+					}
+				}
+				
+				todo.setExpectedArrival(todo.getExpectedArrival() + ETA_delay);
 				while (SimClock.getTime() != todo.getExpectedArrival()){
 					//busy wait
 				}
 				// do stuff now 
+				manager.unloadAtFloor(dest, currentFloor, numPassengers);
+				manager.freeThatFloor(dest);
+
 			}
 			if (numPassengers == 0){
 				int prospectiveFloor = manager.whoWantsUp();

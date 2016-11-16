@@ -4,7 +4,7 @@ public class BuildingFloor
 	private int[] totalDestinationRequests = new int[5];
 	private int[] arrivedPassengers = new int[5];
 	private int[] passengerRequests = new int[5];
-	private int approachingElevator;
+	private int approachingElevator = -1;
 	
 	public int getTotalDestinationRequestsAtIndex(int index)
 	{

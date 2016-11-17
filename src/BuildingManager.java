@@ -14,7 +14,7 @@ public class BuildingManager
 	public int whoWantsUp(){
 		for (int i = 0; i < 5; ++i){
 			for (int j = 4; j > i; --j){
-				if (floors[i].getPassengerRequestsAtIndex(j) > 0 && floors[i].getApproachingElevator() != -1)
+				if (floors[i].getNumRequestsToFloor(j) > 0 && floors[i].getApproachingElevator() != -1)
 					return i;
 			}
 		}
@@ -24,7 +24,7 @@ public class BuildingManager
 	public int whoWantsDown(){
 		for (int i = 0; i < 5; ++i){
 			for (int j = 0; j < i; ++j){
-				if (floors[i].getPassengerRequestsAtIndex(j) > 0 && floors[i].getApproachingElevator() != -1)
+				if (floors[i].getNumRequestsToFloor(j) > 0 && floors[i].getApproachingElevator() != -1)
 					return i;
 			}
 		}
@@ -46,19 +46,29 @@ public class BuildingManager
 	public void modifyFloorState(int i, PassengerArrival behavior){
 		floorLock.lock();
 		int destination = behavior.getDestinationFloor();
-		int currentNumRequests = floors[i].getTotalDestinationRequestsAtIndex(destination);
-		int currentPassengerRequests = floors[i].getPassengerRequestsAtIndex(destination);
+		int currentNumRequests = floors[i].getTotalDestReqAtFloor(destination);
+		int currentPassengerRequests = floors[i].getNumRequestsToFloor(destination);
 		int incomingNumRequests = behavior.getNumPassengers();
-		floors[i].setTotalDestinationRequestsAtIndex(destination, currentNumRequests + incomingNumRequests);
-		floors[i].setPassengerRequestsAtIndex(destination, currentPassengerRequests + incomingNumRequests);
+		floors[i].setTotalDestReqAtFloor(destination, currentNumRequests + incomingNumRequests);
+		floors[i].setNumRequestsToFloor(destination, currentPassengerRequests + incomingNumRequests);
 		floorLock.unlock();
+	}
+	
+	public int getNumPassengers(int floor, int dest){
+		return floors[floor].getNumRequestsToFloor(dest);
+	}
+	
+	public int pickUpGroup(int floor, int dest){
+		int passengers = floors[floor].getNumRequestsToFloor(dest);
+		floors[floor].setNumRequestsToFloor(dest, 0);
+		return passengers;
 	}
 	
 	public void unloadAtFloor(int dest, int origin, int numPassengers){
 		floorLock.lock();
 		floors[dest].incrementArrivedPassengersAtIndex(origin, numPassengers);
-		int currentPassengerRequests = floors[origin].getPassengerRequestsAtIndex(dest);
-		floors[origin].setPassengerRequestsAtIndex(origin, currentPassengerRequests - numPassengers);
+		int currentPassengerRequests = floors[origin].getNumRequestsToFloor(dest);
+		floors[origin].setNumRequestsToFloor(origin, currentPassengerRequests - numPassengers);
 		floorLock.unlock();
 
 	}

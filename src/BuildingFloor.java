@@ -6,11 +6,11 @@ public class BuildingFloor
 	private int[] passengerRequests = new int[5];
 	private int approachingElevator = -1;
 	
-	public int getTotalDestinationRequestsAtIndex(int index)
+	public int getTotalDestReqAtFloor(int index)
 	{
 		return totalDestinationRequests[index];
 	}
-	public void setTotalDestinationRequestsAtIndex(int index, int num)
+	public void setTotalDestReqAtFloor(int index, int num)
 	{
 		this.totalDestinationRequests[index] = num;
 	}
@@ -22,11 +22,11 @@ public class BuildingFloor
 	{
 		this.arrivedPassengers[index] += num;
 	}
-	public int getPassengerRequestsAtIndex(int index)
+	public int getNumRequestsToFloor(int index)
 	{
 		return passengerRequests[index];
 	}
-	public void setPassengerRequestsAtIndex(int index, int num)
+	public void setNumRequestsToFloor(int index, int num)
 	{
 		this.passengerRequests[index] = num;
 	}

@@ -27,7 +27,7 @@ public class Elevator implements Runnable
 	{
 		ElevatorEvent todo;
 		while(true && !Thread.interrupted()){
-			
+			int ETA_delay = 0;
 			// idle elevator state
 			if (numPassengers == 0){
 				int prospectiveFloor = -1;
@@ -39,18 +39,46 @@ public class Elevator implements Runnable
 						prospectiveFloor = manager.whoWantsDown();
 				}
 				
-				// we gon pick those peeps up
+				// we gon get it
 				manager.dibsOnThatFloor(prospectiveFloor, elevatorID);
-				moveQueue.add(createElevatorEvent(prospectiveFloor));
+				moveQueue.add(createElevatorEvent(prospectiveFloor, ETA_delay));
 			}
 			
 			// *** this whole section is  wrong ***
 			if (!moveQueue.isEmpty()){
 				todo = moveQueue.get(0);
-				int ETA_delay = 0;
 				int dest = todo.getDestination();
 				
-
+				// pickup mode
+				if (numPassengers == 0){
+					while (SimClock.getTime() != todo.getExpectedArrival()){
+						// busy wait
+					}
+					
+					// arrived at destination
+					currentFloor = dest;
+					for (int i = currentFloor + 1; i < 5; ++i){
+						// if there are people who want to go up
+						if (manager.getNumPassengers(currentFloor, i) > 0){
+							ETA_delay += 10;
+							moveQueue.add(createElevatorEvent(i, ETA_delay));
+							numPassengers += manager.getNumPassengers(currentFloor, i);
+						}
+					}
+					// no one wants to go up
+					if (numPassengers == 0){
+						for (int i = currentFloor - 1; i > 0 ; --i){
+							// if there are people who want to go down
+							if (manager.getNumPassengers(currentFloor, i) > 0){
+								ETA_delay += 10;
+								moveQueue.add(createElevatorEvent(i, ETA_delay));
+								numPassengers += manager.getNumPassengers(currentFloor, i);
+							}
+						}
+					}
+					totalLoadedPassengers += numPassengers;
+				}
+				/*
 				// going up
 				for (int i = currentFloor; i < dest; ++i){
 					if (passengerDestinations[i] > 0){
@@ -71,6 +99,7 @@ public class Elevator implements Runnable
 					}
 				}
 				
+				
 				todo.setExpectedArrival(todo.getExpectedArrival() + ETA_delay);
 				while (SimClock.getTime() != todo.getExpectedArrival()){
 					//busy wait
@@ -78,17 +107,17 @@ public class Elevator implements Runnable
 				// do stuff now 
 				manager.unloadAtFloor(dest, currentFloor, numPassengers);
 				manager.freeThatFloor(dest);
-
+				*/
 			}
 
 		}
 
 	}
-	private ElevatorEvent createElevatorEvent(int destination){
+	private ElevatorEvent createElevatorEvent(int destination, int delay){
 		int ETA = SimClock.getTime() + Math.abs(currentFloor - destination) * 5 + 20;
 		if (numPassengers == 0) // no unloading
 			ETA -= 10;
-		return new ElevatorEvent(destination, ETA);
+		return new ElevatorEvent(destination, ETA + delay);
 	}
 
 }

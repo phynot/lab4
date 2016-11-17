@@ -7,25 +7,33 @@ public class BuildingManager
 	private Lock floorLock;
 	
 	public BuildingManager(){
+		System.out.println("hello");
 		floors = new BuildingFloor[5];
+		for (int i = 0; i < 5; ++i){
+			floors[i] = new BuildingFloor();
+		}
 		floorLock = new ReentrantLock();
 	}
 	
-	public int whoWantsUp(){
+	public synchronized int whoWantsUp(int caller){
 		for (int i = 0; i < 5; ++i){
 			for (int j = 4; j > i; --j){
-				if (floors[i].getNumRequestsToFloor(j) > 0 && floors[i].getApproachingElevator() != -1)
+				if (floors[i].getNumRequestsToFloor(j) > 0 && floors[i].getApproachingElevator() == -1){
+					dibsOnThatFloor(i, caller);
 					return i;
+				}
 			}
 		}
 		return -1;
 	}
 	
-	public int whoWantsDown(){
+	public synchronized int whoWantsDown(int caller){
 		for (int i = 0; i < 5; ++i){
 			for (int j = 0; j < i; ++j){
-				if (floors[i].getNumRequestsToFloor(j) > 0 && floors[i].getApproachingElevator() != -1)
+				if (floors[i].getNumRequestsToFloor(j) > 0 && floors[i].getApproachingElevator() == -1){
+					dibsOnThatFloor(i, caller);
 					return i;
+				}
 			}
 		}
 		return -1;

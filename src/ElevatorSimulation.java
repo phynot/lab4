@@ -23,11 +23,18 @@ public class ElevatorSimulation
 		getTotalSimulationTime();
 		getSimulatedSecondRate();
 		getPassengerArrivals();
+		
+		for (int i = 0; i < 5; ++i){
+			Thread t = new Thread(new Elevator(i, manager));
+			t.start();
+		}
 		while (SimClock.getTime() <= totalSimulationTime){
+			//System.out.println(SimClock.getTime());
 			for (int i = 0; i < tracker.size(); ++i){
 				for (int j = 0; j < tracker.get(i).size(); ++j){
 					if (tracker.get(i).get(j).getExpectedTimeOfArrival() == SimClock.getTime()){
 						PassengerArrival behavior = tracker.get(i).get(j);
+						System.out.println("At time " + SimClock.getTime() + ", Floor " + i + " has " + behavior.getNumPassengers() + " people requesting to go to floor " + behavior.getDestinationFloor());
 						manager.modifyFloorState(i,  behavior);
 						behavior.setExpectedTimeOfArrival(SimClock.getTime() + behavior.getTimePeriod());
 					}

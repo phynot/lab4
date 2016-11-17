@@ -32,29 +32,30 @@ public class Elevator implements Runnable
 			if (numPassengers == 0){
 				int prospectiveFloor = -1;
 				while (prospectiveFloor == -1){
+
 					// scan from floor 0 -> current floor
-					prospectiveFloor = manager.whoWantsUp();
+					prospectiveFloor = manager.whoWantsUp(elevatorID);
 					if (prospectiveFloor == -1)
 						// scan from current floor -> floor 0
-						prospectiveFloor = manager.whoWantsDown();
+						prospectiveFloor = manager.whoWantsDown(elevatorID);
 				}
-				
+				System.out.println("Elevator " + elevatorID + " heading to floor " + prospectiveFloor);
 				// we gon get it
-				manager.dibsOnThatFloor(prospectiveFloor, elevatorID);
-				moveQueue.add(createElevatorEvent(prospectiveFloor, ETA_delay));
+				moveQueue.add(createElevatorEvent(prospectiveFloor, -10));
 			}
 			
-			// *** this whole section is  wrong ***
 			if (!moveQueue.isEmpty()){
 				todo = moveQueue.get(0);
 				int dest = todo.getDestination();
 				
 				// pickup mode
 				if (numPassengers == 0){
+					System.out.println("ETA " + todo.getExpectedArrival());
 					while (SimClock.getTime() != todo.getExpectedArrival()){
 						// busy wait
+						//System.out.println(SimClock.getTime());
 					}
-					
+					System.out.println("Arrived at floor " + dest + ", current time: " + SimClock.getTime());
 					// arrived at destination
 					currentFloor = dest;
 					for (int i = currentFloor + 1; i < 5; ++i){
@@ -67,7 +68,7 @@ public class Elevator implements Runnable
 					}
 					// no one wants to go up
 					if (numPassengers == 0){
-						for (int i = currentFloor - 1; i > 0 ; --i){
+						for (int i = currentFloor - 1; i >= 0 ; --i){
 							// if there are people who want to go down
 							if (manager.getNumPassengers(currentFloor, i) > 0){
 								ETA_delay += 10;
@@ -77,6 +78,7 @@ public class Elevator implements Runnable
 						}
 					}
 					totalLoadedPassengers += numPassengers;
+					System.out.println("Elevator " + elevatorID + " picked up " + numPassengers + " dudes");
 				}
 				/*
 				// going up

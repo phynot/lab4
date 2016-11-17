@@ -1,7 +1,7 @@
 
 public class SimClock
 {
-	private static int simulatedTime = 0;
+	private static volatile int simulatedTime = 0;
 	
 	//public SimClock(){
 	//	simulatedTime = 0;

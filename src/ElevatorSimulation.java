@@ -23,10 +23,13 @@ public class ElevatorSimulation
 		getTotalSimulationTime();
 		getSimulatedSecondRate();
 		getPassengerArrivals();
+		scanner.close();
 		
+		// Setup the simulation
+		Thread[] threadPool = new Thread[5];
 		for (int i = 0; i < 5; ++i){
-			Thread t = new Thread(new Elevator(i, manager));
-			t.start();
+			threadPool[i] = new Thread(new Elevator(i, manager));
+			threadPool[i].start();
 		}
 		while (SimClock.getTime() <= totalSimulationTime){
 			//System.out.println(SimClock.getTime());
@@ -43,7 +46,9 @@ public class ElevatorSimulation
 			Thread.sleep(simulatedSecondRate);
 			SimClock.tick();
 		}
-			
+		
+		for (Thread t: threadPool)
+			t.join();
 			
 		/* did i read in the input correctly maybe maybe not
 		System.out.println(tracker.size());
@@ -53,7 +58,7 @@ public class ElevatorSimulation
 				System.out.println("at f" + i + "- np: " + poop.getNumPassengers() +  " df: " + poop.getDestinationFloor() + " tp: " + poop.getTimePeriod());
 			}
 		}*/
-		scanner.close();
+
 		
 	}
 	

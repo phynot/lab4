@@ -47,6 +47,7 @@ public class Elevator implements Runnable
 			}
 			
 			while (!moveQueue.isEmpty()){
+				ETA_delay = 0;
 				todo = moveQueue.get(0);
 				dest = todo.getDestination();
 				
@@ -77,13 +78,13 @@ public class Elevator implements Runnable
 						}
 					}
 					totalLoadedPassengers += numPassengers;
-					System.out.println("Elevator " + elevatorID + " picked up " + numPassengers + " dudes at " + SimClock.getTime());
+					System.out.println("Elevator " + elevatorID + " picked up " + numPassengers + " dudes from floor " + dest + " at time " + SimClock.getTime());
 					manager.freeThatFloor(dest);
 					
 				}
 				// dropoff mode
 				else {
-					System.out.println("Elevator " + elevatorID + " dropped off " + passengerDestinations[dest] + " dudes on floor " + dest + " at " + SimClock.getTime());
+					System.out.println("Elevator " + elevatorID + " dropped off " + passengerDestinations[dest] + " dudes on floor " + dest + " at time " + SimClock.getTime());
 					manager.unloadAtFloor(dest, origin, passengerDestinations[dest]);
 					numPassengers -= passengerDestinations[dest];
 					totalUnloadedPassengers += passengerDestinations[dest];

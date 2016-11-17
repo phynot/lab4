@@ -24,7 +24,7 @@ public class ElevatorSimulation
 		getSimulatedSecondRate();
 		getPassengerArrivals();
 		
-		for (int i = 0; i < 5; ++i){
+		for (int i = 0; i < 2; ++i){
 			Thread t = new Thread(new Elevator(i, manager));
 			t.start();
 		}

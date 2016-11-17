@@ -27,6 +27,8 @@ public class Elevator implements Runnable
 	{
 		ElevatorEvent todo;
 		while(true && !Thread.interrupted()){
+			
+			// idle elevator state
 			if (numPassengers == 0){
 				int prospectiveFloor = -1;
 				while (prospectiveFloor == -1){
@@ -42,12 +44,13 @@ public class Elevator implements Runnable
 				moveQueue.add(createElevatorEvent(prospectiveFloor));
 			}
 			
+			// *** this whole section is  wrong ***
 			if (!moveQueue.isEmpty()){
 				todo = moveQueue.get(0);
 				int ETA_delay = 0;
 				int dest = todo.getDestination();
 				
-				// *** this is probably wrong ***
+
 				// going up
 				for (int i = currentFloor; i < dest; ++i){
 					if (passengerDestinations[i] > 0){

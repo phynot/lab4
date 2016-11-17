@@ -39,9 +39,9 @@ public class Elevator implements Runnable
 						// scan from current floor -> floor 0
 						prospectiveFloor = manager.whoWantsDown(elevatorID);
 				}
-				System.out.println("Elevator " + elevatorID + " heading to floor " + prospectiveFloor);
+				System.out.println("Elevator " + elevatorID + " heading to floor " + prospectiveFloor + " from floor " + currentFloor);
 				// we gon get it
-				moveQueue.add(createElevatorEvent(prospectiveFloor, -10));
+				moveQueue.add(createElevatorEvent(prospectiveFloor, 0));
 			}
 			
 			if (!moveQueue.isEmpty()){
@@ -50,12 +50,10 @@ public class Elevator implements Runnable
 				
 				// pickup mode
 				if (numPassengers == 0){
-					System.out.println("ETA " + todo.getExpectedArrival());
 					while (SimClock.getTime() != todo.getExpectedArrival()){
 						// busy wait
 						//System.out.println(SimClock.getTime());
 					}
-					System.out.println("Arrived at floor " + dest + ", current time: " + SimClock.getTime());
 					// arrived at destination
 					currentFloor = dest;
 					for (int i = currentFloor + 1; i < 5; ++i){
@@ -63,7 +61,7 @@ public class Elevator implements Runnable
 						if (manager.getNumPassengers(currentFloor, i) > 0){
 							ETA_delay += 10;
 							moveQueue.add(createElevatorEvent(i, ETA_delay));
-							numPassengers += manager.getNumPassengers(currentFloor, i);
+							numPassengers += manager.pickUpGroup(currentFloor, i);
 						}
 					}
 					// no one wants to go up
@@ -73,12 +71,15 @@ public class Elevator implements Runnable
 							if (manager.getNumPassengers(currentFloor, i) > 0){
 								ETA_delay += 10;
 								moveQueue.add(createElevatorEvent(i, ETA_delay));
-								numPassengers += manager.getNumPassengers(currentFloor, i);
+								numPassengers += manager.pickUpGroup(currentFloor, i);
 							}
 						}
 					}
 					totalLoadedPassengers += numPassengers;
-					System.out.println("Elevator " + elevatorID + " picked up " + numPassengers + " dudes");
+					System.out.println("Elevator " + elevatorID + " picked up " + numPassengers + " dudes at " + SimClock.getTime());
+					moveQueue.remove(0);
+					manager.freeThatFloor(dest);
+					
 				}
 				/*
 				// going up

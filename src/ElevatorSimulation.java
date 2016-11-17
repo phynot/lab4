@@ -27,9 +27,9 @@ public class ElevatorSimulation
 			for (int i = 0; i < tracker.size(); ++i){
 				for (int j = 0; j < tracker.get(i).size(); ++j){
 					if (tracker.get(i).get(j).getExpectedTimeOfArrival() == SimClock.getTime()){
-						manager.modifyFloorState(i,  tracker.get(i).get(j));
-						int timePeriod = tracker.get(i).get(j).getTimePeriod();
-						tracker.get(i).get(j).setExpectedTimeOfArrival(SimClock.getTime() + timePeriod);
+						PassengerArrival behavior = tracker.get(i).get(j);
+						manager.modifyFloorState(i,  behavior);
+						behavior.setExpectedTimeOfArrival(SimClock.getTime() + behavior.getTimePeriod());
 					}
 				}
 			}

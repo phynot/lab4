@@ -27,10 +27,27 @@ public class Elevator implements Runnable
 	{
 		ElevatorEvent todo;
 		while(true && !Thread.interrupted()){
+			if (numPassengers == 0){
+				int prospectiveFloor = -1;
+				while (prospectiveFloor == -1){
+					// scan from floor 0 -> current floor
+					prospectiveFloor = manager.whoWantsUp();
+					if (prospectiveFloor == -1)
+						// scan from current floor -> floor 0
+						prospectiveFloor = manager.whoWantsDown();
+				}
+				
+				// we gon pick those peeps up
+				manager.dibsOnThatFloor(prospectiveFloor, elevatorID);
+				moveQueue.add(createElevatorEvent(prospectiveFloor));
+			}
+			
 			if (!moveQueue.isEmpty()){
-				todo = moveQueue.remove(0);
+				todo = moveQueue.get(0);
 				int ETA_delay = 0;
 				int dest = todo.getDestination();
+				
+				// *** this is probably wrong ***
 				// going up
 				for (int i = currentFloor; i < dest; ++i){
 					if (passengerDestinations[i] > 0){
@@ -45,9 +62,9 @@ public class Elevator implements Runnable
 				for (int i = currentFloor; i > dest; --i){
 					if (passengerDestinations[i] > 0){
 						totalUnloadedPassengers += passengerDestinations[i];
-						ETA_delay += 10;
-						manager.unloadAtFloor(i, currentFloor, passengerDestinations[i]);
 						numPassengers -= passengerDestinations[i];
+						manager.unloadAtFloor(i, currentFloor, passengerDestinations[i]);
+						ETA_delay += 10;
 					}
 				}
 				
@@ -60,14 +77,7 @@ public class Elevator implements Runnable
 				manager.freeThatFloor(dest);
 
 			}
-			if (numPassengers == 0){
-				int prospectiveFloor = manager.whoWantsUp();
-				if (prospectiveFloor == -1)
-					prospectiveFloor = manager.whoWantsDown();
-				if (prospectiveFloor != -1)
-					manager.dibsOnThatFloor(prospectiveFloor, elevatorID);
-				moveQueue.add(createElevatorEvent(prospectiveFloor));
-			}
+
 		}
 
 	}

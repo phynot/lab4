@@ -47,8 +47,9 @@ public class ElevatorSimulation
 			SimClock.tick();
 		}
 		
+		System.out.println("bye");
 		for (Thread t: threadPool)
-			t.join();
+			t.interrupt();
 			
 		/* did i read in the input correctly maybe maybe not
 		System.out.println(tracker.size());

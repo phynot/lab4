@@ -41,7 +41,7 @@ public class Elevator implements Runnable
 						// scan from current floor -> floor 0
 						prospectiveFloor = manager.whoWantsDown(elevatorID);
 				}
-				System.out.println("Time " + SimClock.getTime() + ": Elevator " + elevatorID + " traversing [Floor " + currentFloor + " -> " + prospectiveFloor + "]");
+				System.out.println("Time " + SimClock.getTime() + ": Elevator " + elevatorID + "[TRAVERSING Floor " + currentFloor + " -> " + prospectiveFloor + "]");
 				// we gon get it
 				moveQueue.add(createElevatorEvent(prospectiveFloor, 0));
 			}
@@ -78,13 +78,13 @@ public class Elevator implements Runnable
 						}
 					}
 					totalLoadedPassengers += numPassengers;
-					System.out.println("Time " + SimClock.getTime() + ": Elevator " + elevatorID + " [PICKED UP] " + numPassengers + " dudes from Floor " + dest);
+					System.out.println("Time " + SimClock.getTime() + ": Elevator " + elevatorID + " [PICKED UP " + numPassengers + " dudes from Floor " + dest + "]");
 					manager.freeThatFloor(dest);
 					
 				}
 				// dropoff mode
 				else {
-					System.out.println("Time " + SimClock.getTime() + ": Elevator " + elevatorID + " [DROPPED OFF] " + passengerDestinations[dest] + " dudes on Floor " + dest);
+					System.out.println("Time " + SimClock.getTime() + ": Elevator " + elevatorID + " [DROPPED OFF " + passengerDestinations[dest] + " dudes on Floor " + dest + "]");
 					manager.unloadAtFloor(dest, origin, passengerDestinations[dest]);
 					numPassengers -= passengerDestinations[dest];
 					totalUnloadedPassengers += passengerDestinations[dest];

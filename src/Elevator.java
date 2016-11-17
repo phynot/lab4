@@ -129,9 +129,7 @@ public class Elevator implements Runnable
 
 	}
 	private ElevatorEvent createElevatorEvent(int destination, int delay){
-		int ETA = SimClock.getTime() + Math.abs(currentFloor - destination) * 5 + 20;
-		if (numPassengers == 0) // no unloading
-			ETA -= 10;
+		int ETA = SimClock.getTime() + Math.abs(currentFloor - destination) * 5 + 10;
 		return new ElevatorEvent(destination, ETA + delay);
 	}
 	

@@ -52,7 +52,9 @@ public class Elevator implements Runnable
 				dest = todo.getDestination();
 				
 				while (SimClock.getTime() != todo.getExpectedArrival()){
-						// busy wait
+					// busy wait
+					if (Thread.interrupted())
+						return;
 						//System.out.println(SimClock.getTime());
 					}
 				// arrived at destination

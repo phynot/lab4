@@ -34,7 +34,7 @@ public class ElevatorSimulation
 				for (int j = 0; j < tracker.get(i).size(); ++j){
 					if (tracker.get(i).get(j).getExpectedTimeOfArrival() == SimClock.getTime()){
 						PassengerArrival behavior = tracker.get(i).get(j);
-						System.out.println("Time " + SimClock.getTime() + ": " + behavior.getNumPassengers() + " people request [Floor " + i + " -> Floor "  + behavior.getDestinationFloor() + "]");
+						System.out.println("Time " + SimClock.getTime() + ": " + behavior.getNumPassengers() + " people [REQUEST Floor " + i + " -> Floor "  + behavior.getDestinationFloor() + "]");
 						manager.newPassengerArrival(i,  behavior);
 						behavior.setExpectedTimeOfArrival(SimClock.getTime() + behavior.getTimePeriod());
 					}

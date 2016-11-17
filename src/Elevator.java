@@ -41,7 +41,7 @@ public class Elevator implements Runnable
 						// scan from current floor -> floor 0
 						prospectiveFloor = manager.whoWantsDown(elevatorID);
 				}
-				System.out.println("Time " + SimClock.getTime() + ": Elevator " + elevatorID + "[TRAVERSING Floor " + currentFloor + " -> " + prospectiveFloor + "]");
+				System.out.println("Time " + SimClock.getTime() + ": Elevator " + elevatorID + " [TRAVERSING Floor " + currentFloor + " -> " + prospectiveFloor + "]");
 				// we gon get it
 				moveQueue.add(createElevatorEvent(prospectiveFloor, 0));
 			}

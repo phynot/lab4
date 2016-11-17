@@ -41,7 +41,7 @@ public class Elevator implements Runnable
 						// scan from current floor -> floor 0
 						prospectiveFloor = manager.whoWantsDown(elevatorID);
 				}
-				System.out.println("Elevator " + elevatorID + " heading to floor " + prospectiveFloor + " from floor " + currentFloor);
+				System.out.println("Time " + SimClock.getTime() + ": Elevator " + elevatorID + " traversing [Floor " + currentFloor + " -> " + prospectiveFloor + "]");
 				// we gon get it
 				moveQueue.add(createElevatorEvent(prospectiveFloor, 0));
 			}
@@ -78,13 +78,13 @@ public class Elevator implements Runnable
 						}
 					}
 					totalLoadedPassengers += numPassengers;
-					System.out.println("Elevator " + elevatorID + " picked up " + numPassengers + " dudes from floor " + dest + " at time " + SimClock.getTime());
+					System.out.println("Time " + SimClock.getTime() + ": Elevator " + elevatorID + " [PICKED UP] " + numPassengers + " dudes from Floor " + dest);
 					manager.freeThatFloor(dest);
 					
 				}
 				// dropoff mode
 				else {
-					System.out.println("Elevator " + elevatorID + " dropped off " + passengerDestinations[dest] + " dudes on floor " + dest + " at time " + SimClock.getTime());
+					System.out.println("Time " + SimClock.getTime() + ": Elevator " + elevatorID + " [DROPPED OFF] " + passengerDestinations[dest] + " dudes on Floor " + dest);
 					manager.unloadAtFloor(dest, origin, passengerDestinations[dest]);
 					numPassengers -= passengerDestinations[dest];
 					totalUnloadedPassengers += passengerDestinations[dest];
@@ -93,36 +93,6 @@ public class Elevator implements Runnable
 				
 				moveQueue.remove(0);
 
-				/*
-				// going up
-				for (int i = currentFloor; i < dest; ++i){
-					if (passengerDestinations[i] > 0){
-						totalUnloadedPassengers += passengerDestinations[i];
-						numPassengers -= passengerDestinations[i];
-						manager.unloadAtFloor(i, currentFloor, passengerDestinations[i]);
-						ETA_delay += 10;
-					}
-				}
-				
-				// going down
-				for (int i = currentFloor; i > dest; --i){
-					if (passengerDestinations[i] > 0){
-						totalUnloadedPassengers += passengerDestinations[i];
-						numPassengers -= passengerDestinations[i];
-						manager.unloadAtFloor(i, currentFloor, passengerDestinations[i]);
-						ETA_delay += 10;
-					}
-				}
-				
-				
-				todo.setExpectedArrival(todo.getExpectedArrival() + ETA_delay);
-				while (SimClock.getTime() != todo.getExpectedArrival()){
-					//busy wait
-				}
-				// do stuff now 
-				manager.unloadAtFloor(dest, currentFloor, numPassengers);
-				manager.freeThatFloor(dest);
-				*/
 			}
 
 		}

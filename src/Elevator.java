@@ -87,6 +87,7 @@ public class Elevator implements Runnable
 					manager.unloadAtFloor(dest, origin, passengerDestinations[dest]);
 					numPassengers -= passengerDestinations[dest];
 					totalUnloadedPassengers += passengerDestinations[dest];
+					passengerDestinations[dest] = 0;
 				}
 				
 				moveQueue.remove(0);

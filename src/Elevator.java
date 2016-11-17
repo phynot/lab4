@@ -28,6 +28,8 @@ public class Elevator implements Runnable
 		ElevatorEvent todo;
 		while(true && !Thread.interrupted()){
 			int ETA_delay = 0;
+			int dest;
+			int origin;
 			// idle elevator state
 			if (numPassengers == 0){
 				int prospectiveFloor = -1;
@@ -44,45 +46,51 @@ public class Elevator implements Runnable
 				moveQueue.add(createElevatorEvent(prospectiveFloor, 0));
 			}
 			
-			if (!moveQueue.isEmpty()){
+			while (!moveQueue.isEmpty()){
 				todo = moveQueue.get(0);
-				int dest = todo.getDestination();
+				dest = todo.getDestination();
 				
-				// pickup mode
-				if (numPassengers == 0){
-					while (SimClock.getTime() != todo.getExpectedArrival()){
+				while (SimClock.getTime() != todo.getExpectedArrival()){
 						// busy wait
 						//System.out.println(SimClock.getTime());
 					}
-					// arrived at destination
-					currentFloor = dest;
+				// arrived at destination
+				origin = currentFloor;
+				currentFloor = dest;
+				// pickup mode
+				if (numPassengers == 0){
 					for (int i = currentFloor + 1; i < 5; ++i){
 						// if there are people who want to go up
 						if (manager.getNumPassengers(currentFloor, i) > 0){
-							moveQueue.add(createElevatorEvent(i, ETA_delay));
-							passengerDestinations[i] += manager.getNumPassengers(currentFloor, i);
-							numPassengers += manager.pickUpGroup(currentFloor, i);
+							loadIntoElevator(currentFloor, i, ETA_delay);
 							ETA_delay += 10;
 						}
 					}
-					// no one wants to go up
+					// no one wanted to go up
 					if (numPassengers == 0){
 						for (int i = currentFloor - 1; i >= 0 ; --i){
 							// if there are people who want to go down
 							if (manager.getNumPassengers(currentFloor, i) > 0){
-								moveQueue.add(createElevatorEvent(i, ETA_delay));
-								passengerDestinations[i] += manager.getNumPassengers(currentFloor, i);
-								numPassengers += manager.pickUpGroup(currentFloor, i);
+								loadIntoElevator(currentFloor, i, ETA_delay);
 								ETA_delay += 10;
 							}
 						}
 					}
 					totalLoadedPassengers += numPassengers;
 					System.out.println("Elevator " + elevatorID + " picked up " + numPassengers + " dudes at " + SimClock.getTime());
-					moveQueue.remove(0);
 					manager.freeThatFloor(dest);
 					
 				}
+				// dropoff mode
+				else {
+					System.out.println("Elevator " + elevatorID + " dropped off " + passengerDestinations[dest] + " dudes on floor " + dest + " at " + SimClock.getTime());
+					manager.unloadAtFloor(dest, origin, passengerDestinations[dest]);
+					numPassengers -= passengerDestinations[dest];
+					totalUnloadedPassengers += passengerDestinations[dest];
+				}
+				
+				moveQueue.remove(0);
+
 				/*
 				// going up
 				for (int i = currentFloor; i < dest; ++i){
@@ -124,5 +132,11 @@ public class Elevator implements Runnable
 			ETA -= 10;
 		return new ElevatorEvent(destination, ETA + delay);
 	}
+	
+	private void loadIntoElevator(int currentFloor, int dest, int ETA_delay){
+		moveQueue.add(createElevatorEvent(dest, ETA_delay));
+		passengerDestinations[dest] += manager.getNumPassengers(currentFloor, dest);
+		numPassengers += manager.pickUpGroup(currentFloor, dest);
 
+	}
 }

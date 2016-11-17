@@ -59,9 +59,10 @@ public class Elevator implements Runnable
 					for (int i = currentFloor + 1; i < 5; ++i){
 						// if there are people who want to go up
 						if (manager.getNumPassengers(currentFloor, i) > 0){
-							ETA_delay += 10;
 							moveQueue.add(createElevatorEvent(i, ETA_delay));
+							passengerDestinations[i] += manager.getNumPassengers(currentFloor, i);
 							numPassengers += manager.pickUpGroup(currentFloor, i);
+							ETA_delay += 10;
 						}
 					}
 					// no one wants to go up
@@ -69,9 +70,10 @@ public class Elevator implements Runnable
 						for (int i = currentFloor - 1; i >= 0 ; --i){
 							// if there are people who want to go down
 							if (manager.getNumPassengers(currentFloor, i) > 0){
-								ETA_delay += 10;
 								moveQueue.add(createElevatorEvent(i, ETA_delay));
+								passengerDestinations[i] += manager.getNumPassengers(currentFloor, i);
 								numPassengers += manager.pickUpGroup(currentFloor, i);
+								ETA_delay += 10;
 							}
 						}
 					}

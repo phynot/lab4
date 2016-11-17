@@ -51,7 +51,7 @@ public class BuildingManager
 		floorLock.unlock();
 	}
 	
-	public void modifyFloorState(int i, PassengerArrival behavior){
+	public void newPassengerArrival(int i, PassengerArrival behavior){
 		floorLock.lock();
 		int destination = behavior.getDestinationFloor();
 		int currentNumRequests = floors[i].getTotalDestReqAtFloor(destination);

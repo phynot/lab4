@@ -84,9 +84,4 @@ public class BuildingManager
 	{
 		return floors;
 	}
-	public void setFloors(BuildingFloor[] floors)
-	{
-		this.floors = floors;
-	}
 }
-//		floors[i].incrementArrivedPassengersAtIndex(i, behavior.getNumPassengers());

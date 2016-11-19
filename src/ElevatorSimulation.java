@@ -47,7 +47,6 @@ public class ElevatorSimulation
 			Thread.sleep(simulatedSecondRate);
 			SimClock.tick();
 		}
-		printBuildingState(manager);
 		System.out.println("bye");
 		for (Thread t: threadPool)
 			t.interrupt();

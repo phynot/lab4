@@ -26,8 +26,8 @@ public class Elevator implements Runnable
 	public void run()
 	{
 		ElevatorEvent todo;
-		while(true && !Thread.interrupted()){
-			int origin;
+		while(!Thread.currentThread().isInterrupted()){
+			int origin = currentFloor;
 			// idle elevator state
 			if (numPassengers == 0){
 				int prospectiveFloor = -1;
@@ -38,26 +38,30 @@ public class Elevator implements Runnable
 			}
 			while (!moveQueue.isEmpty()){
 				todo = moveQueue.get(0);
-				origin = currentFloor;
 				currentFloor = todo.getDestination();
 				System.out.printf("Time %d: Elevator %d [TRAVERSING Floor %d -> %d] for %s\n", 
-								SimClock.getTime(), elevatorID, origin, currentFloor, (numPassengers == 0 ? "PICKUP" : "DROPOFF"));
+					SimClock.getTime(), elevatorID, origin, currentFloor, (numPassengers == 0 ? "PICKUP" : "DROPOFF"));
 				while (SimClock.getTime() != todo.getExpectedArrival()){
 					// busy wait
-					if (Thread.interrupted())
+					if (Thread.interrupted()){
+						System.out.printf("Elevator %d stats: \n Total Loaded: %d \n Total Unloaded: %d\n", elevatorID, totalLoadedPassengers, totalUnloadedPassengers);
 						return;
 					}
+						
+				}
 				// arrived at destination
 				// pickup mode
-				if (numPassengers == 0)
+				if (numPassengers == 0){
+					origin = currentFloor;
 					pickUpDudes();
+				}
 				// dropoff mode
 				else
-					dropOffDudes(origin);
+					dropOffDudes(origin, elevatorID);
 				moveQueue.remove(0);
 			}
-
 		}
+
 
 	}
 	private ElevatorEvent createElevatorEvent(int destination, int delay){
@@ -105,9 +109,9 @@ public class Elevator implements Runnable
 		manager.freeThatFloor(currentFloor);
 	}
 	
-	private void dropOffDudes(int origin){
+	private void dropOffDudes(int origin, int fromElevator){
 		System.out.println("Time " + SimClock.getTime() + ": Elevator " + elevatorID + " [DROPPED OFF " + passengerDestinations[currentFloor] + " dudes on Floor " + currentFloor + "]");
-		manager.unloadAtFloor(currentFloor, origin, passengerDestinations[currentFloor]);
+		manager.unloadAtFloor(currentFloor, origin, fromElevator, passengerDestinations[currentFloor]);
 		numPassengers -= passengerDestinations[currentFloor];
 		totalUnloadedPassengers += passengerDestinations[currentFloor];
 		passengerDestinations[currentFloor] = 0;

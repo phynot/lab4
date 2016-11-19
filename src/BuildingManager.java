@@ -72,12 +72,15 @@ public class BuildingManager
 		return passengers;
 	}
 	
-	public void unloadAtFloor(int dest, int origin, int numPassengers){
+	public void unloadAtFloor(int dest, int origin, int elevatorID, int numPassengers){
 		floorLock.lock();
-		floors[dest].incrementArrivedPassengersAtIndex(origin, numPassengers);
-		int currentPassengerRequests = floors[origin].getNumRequestsToFloor(dest);
-		floors[origin].setNumRequestsToFloor(origin, currentPassengerRequests - numPassengers);
+		floors[dest].incrementArrivedPassengersAtIndex(elevatorID, numPassengers);
+		//int currentPassengerRequests = floors[origin].getNumRequestsToFloor(dest);
+		//System.out.println("curr " + currentPassengerRequests);
+		//floors[origin].setNumRequestsToFloor(dest, (currentPassengerRequests - numPassengers));
+		//System.out.println("after drop off: " + floors[origin].getNumRequestsToFloor(dest));
 		floorLock.unlock();
+
 
 	}
 	public BuildingFloor[] getFloors()

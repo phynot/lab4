@@ -1,6 +1,30 @@
 
 public class BuildingFloor
 {
+	public int[] getTotalDestinationRequests()
+	{
+		return totalDestinationRequests;
+	}
+	public void setTotalDestinationRequests(int[] totalDestinationRequests)
+	{
+		this.totalDestinationRequests = totalDestinationRequests;
+	}
+	public int[] getArrivedPassengers()
+	{
+		return arrivedPassengers;
+	}
+	public void setArrivedPassengers(int[] arrivedPassengers)
+	{
+		this.arrivedPassengers = arrivedPassengers;
+	}
+	public int[] getPassengerRequests()
+	{
+		return passengerRequests;
+	}
+	public void setPassengerRequests(int[] passengerRequests)
+	{
+		this.passengerRequests = passengerRequests;
+	}
 	private int[] totalDestinationRequests = {0, 0, 0, 0, 0};
 	private int[] arrivedPassengers = {0, 0, 0, 0, 0};
 	private int[] passengerRequests = {0, 0, 0, 0, 0};

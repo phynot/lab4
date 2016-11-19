@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class ElevatorSimulation
@@ -46,10 +47,12 @@ public class ElevatorSimulation
 			Thread.sleep(simulatedSecondRate);
 			SimClock.tick();
 		}
-		
+		printBuildingState(manager);
 		System.out.println("bye");
 		for (Thread t: threadPool)
 			t.interrupt();
+		Thread.sleep(250);
+		printBuildingState(manager);
 			
 		/* did i read in the input correctly maybe maybe not
 		System.out.println(tracker.size());
@@ -91,5 +94,13 @@ public class ElevatorSimulation
 			++currentFloor;
 		}
 	}
-
+	
+	private void printBuildingState(BuildingManager manager){
+		BuildingFloor[] floors = manager.getFloors();
+		for (int i = 0; i < floors.length; ++i){
+			System.out.printf("Floor %d info: \n Total Destination Requests: %s \n Total Arrived Passengers: %s \n Current Passenger Requests: %s\n",
+				i, Arrays.toString(floors[i].getTotalDestinationRequests()), Arrays.toString(floors[i].getArrivedPassengers()), Arrays.toString(floors[i].getPassengerRequests()));
+		}
+		
+	}
 }

@@ -49,7 +49,6 @@ public class Elevator implements Runnable
 				while (SimClock.getTime() != todo.getExpectedArrival()){
 					// Busy wait to simulate elevator traveling
 					if (Thread.interrupted()) {
-						System.out.printf("Elevator %d stats: \n Total Loaded: %d \n Total Unloaded: %d\n", elevatorID, totalLoadedPassengers, totalUnloadedPassengers);
 						return;
 					}
 				}
@@ -119,5 +118,9 @@ public class Elevator implements Runnable
 		numPassengers -= passengerDestinations[currentFloor];
 		totalUnloadedPassengers += passengerDestinations[currentFloor];
 		passengerDestinations[currentFloor] = 0;
+	}
+	
+	public void printElevatorStats(){
+		System.out.printf("Elevator %d stats: \n Total Loaded: %d \n Total Unloaded: %d\n", elevatorID, totalLoadedPassengers, totalUnloadedPassengers);
 	}
 }

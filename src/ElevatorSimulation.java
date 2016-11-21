@@ -12,7 +12,7 @@ public class ElevatorSimulation
 	private ArrayList<ArrayList<PassengerArrival>> tracker;
 	
 	public ElevatorSimulation() throws FileNotFoundException {
-		scanner = new Scanner(new File("Custom.txt"));
+		scanner = new Scanner(new File("ElevatorConfig.txt"));
 		tracker = new ArrayList<ArrayList<PassengerArrival>>();
 		for (int i = 0; i < 5; ++i){
 			tracker.add(new ArrayList<PassengerArrival>());
@@ -29,8 +29,10 @@ public class ElevatorSimulation
 
 		// Create and start elevator threads
 		Thread[] threadPool = new Thread[5];
+		Elevator[] elevators = new Elevator[5];
 		for (int i = 0; i < 5; ++i) {
-			threadPool[i] = new Thread(new Elevator(i, manager));
+			elevators[i] = new Elevator(i, manager);
+			threadPool[i] = new Thread(elevators[i]);
 			threadPool[i].start();
 		}
 		
@@ -61,6 +63,9 @@ public class ElevatorSimulation
 		// End all threads
 		for (Thread t: threadPool)
 			t.interrupt();
+		for (Elevator e: elevators)
+			e.printElevatorStats();
+		
 		Thread.sleep(250);
 		printBuildingState(manager);
 	}

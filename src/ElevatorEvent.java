@@ -8,22 +8,22 @@ public class ElevatorEvent
 		this.destination = destination;
 		this.expectedArrival = expectedArrival;
 	}
-	public int getDestination()
-	{
+	
+	// Getters
+	public int getDestination() {
 		return destination;
 	}
-	public void setDestination(int destination)
-	{
-		this.destination = destination;
-	}
-	public int getExpectedArrival()
-	{
+	
+	public int getExpectedArrival() {
 		return expectedArrival;
 	}
-	public void setExpectedArrival(int expectedArrival)
-	{
-		this.expectedArrival = expectedArrival;
+	
+	// Setters
+	public void setDestination(int destination) {
+		this.destination = destination;
 	}
 
-
+	public void setExpectedArrival(int expectedArrival) {
+		this.expectedArrival = expectedArrival;
+	}
 }
